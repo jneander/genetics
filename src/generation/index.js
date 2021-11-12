@@ -1,6 +1,8 @@
 import Chromosome from '../Chromosome'
 import {sample} from '../util'
 
+export {default as TextArray} from './TextArray'
+
 export function generateParent(length, geneSet, getFitness) {
   let genes = []
   while (genes.length < length) {
