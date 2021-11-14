@@ -1,4 +1,4 @@
-import type Chromosome from '../Chromosome'
+import type {Chromosome} from '../chromosomes'
 
 export interface Fitness<ValueType> {
   value: ValueType

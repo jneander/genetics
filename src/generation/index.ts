@@ -1,4 +1,4 @@
-import Chromosome from '../Chromosome'
+import {Chromosome} from '../chromosomes'
 import {Fitness} from '../fitness'
 import {sampleArray} from '../util'
 

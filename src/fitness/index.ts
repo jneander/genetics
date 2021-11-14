@@ -1,4 +1,3 @@
-export {default as ArrayMatch} from './ArrayMatch'
-export {default as ArrayOrder} from './ArrayOrder'
-
+export * from './array-match'
+export * from './array-order'
 export * from './types'

@@ -1,6 +1,6 @@
 import {Fitness} from './fitness'
 
-export default class Chromosome<GeneType, FitnessValueType> {
+export class Chromosome<GeneType, FitnessValueType> {
   public fitness: Fitness<FitnessValueType> | null
   public readonly genes: GeneType[]
   public readonly iteration: number

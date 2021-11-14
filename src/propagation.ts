@@ -16,7 +16,7 @@ export type PropagationConfig<GeneType, FitnessValueType> = {
   onRun(): void
 }
 
-export default class Propagation<GeneType, FitnessValueType> {
+export class Propagation<GeneType, FitnessValueType> {
   public iterationCount: number
 
   private bestParent: Chromosome<GeneType, FitnessValueType> | null

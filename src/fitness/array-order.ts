@@ -1,7 +1,7 @@
-import Chromosome from '../Chromosome'
+import {Chromosome} from '../chromosomes'
 import {Fitness, FitnessCalculator} from './types'
 
-type OrderFitnessValue = {
+export type OrderFitnessValue = {
   ordered: number
   gap: number
 }
@@ -38,7 +38,7 @@ export class OrderFitness implements Fitness<OrderFitnessValue> {
   }
 }
 
-export default class ArrayOrder implements FitnessCalculator<number, OrderFitnessValue> {
+export class ArrayOrder implements FitnessCalculator<number, OrderFitnessValue> {
   getFitness(current: Chromosome<number, OrderFitnessValue>): OrderFitness {
     let fitness = 1
     let gap = 0
