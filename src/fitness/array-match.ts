@@ -1,8 +1,7 @@
 import {Chromosome} from '../chromosomes'
 import {NumberFitness} from './number'
-import {FitnessCalculator} from './types'
 
-export class ArrayMatch<GeneType> implements FitnessCalculator<GeneType, number> {
+export class ArrayMatch<GeneType> {
   getFitness(
     current: Chromosome<GeneType, number>,
     target: Chromosome<GeneType, number>
