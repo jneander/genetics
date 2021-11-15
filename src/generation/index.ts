@@ -2,8 +2,6 @@ import {Chromosome} from '../chromosomes'
 import {Fitness} from '../fitness'
 import {sampleArray} from '../util'
 
-export {default as TextArray} from './TextArray'
-
 export function generateParent<GeneType, FitnessValueType>(
   length: number,
   geneSet: GeneType[],
