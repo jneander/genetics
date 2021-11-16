@@ -9,14 +9,18 @@
     "node": ">=14.17.0"
   },
   "scripts": {
-    "build": "tsc -p tsconfig.json",
+    "build": "npm run build:js && npm run build:types",
+    "build:js": "babel src --out-dir dist --extensions '.ts'",
+    "build:types": "tsc -p tsconfig.json --emitDeclarationOnly",
     "clean": "rimraf ./dist",
     "format:fix": "prettier --write ./src",
     "format:test": "prettier --check ./src",
     "lint:fix": "eslint ./src --fix --ext .ts",
     "lint:test": "eslint ./src --ext .ts",
     "prebuild": "npm run clean",
-    "prepublishOnly": "npm run build"
+    "prepublishOnly": "npm run build",
+    "types:test": "tsc --noEmit",
+    "types:test:watch": "tsc --noEmit --watch"
   },
   "repository": {
     "type": "git",
@@ -35,8 +39,14 @@
     "@jneander/utils-async": "^1.1.0"
   },
   "devDependencies": {
+    "@babel/cli": "^7.16.0",
+    "@babel/core": "^7.16.0",
+    "@babel/plugin-proposal-class-properties": "^7.16.0",
+    "@babel/preset-env": "^7.16.0",
+    "@babel/preset-typescript": "^7.16.0",
     "@typescript-eslint/eslint-plugin": "^5.3.1",
     "@typescript-eslint/parser": "^5.3.1",
+    "babel-plugin-add-import-extension": "^1.6.0",
     "eslint": "^8.2.0",
     "eslint-config-prettier": "^8.3.0",
     "eslint-import-resolver-typescript": "^2.5.0",
