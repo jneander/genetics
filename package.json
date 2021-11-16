@@ -1,6 +1,6 @@
 {
   "name": "@jneander/genetics",
-  "version": "0.5.0",
+  "version": "0.5.1",
   "description": "Genetic Algorithms in JavaScript",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
