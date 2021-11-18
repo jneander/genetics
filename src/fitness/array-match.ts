@@ -1,22 +1,41 @@
-import {Chromosome} from '../chromosomes'
-import {NumberFitness} from './number'
+import type {Chromosome} from '../chromosomes'
+import {NumberFitness} from './number-fitness'
+
+function computeIsEqualIdentity<GeneType>(geneA: GeneType, geneB: GeneType) {
+  return geneA === geneB
+}
+
+type ComputeIsEqual<GeneType> = (geneA: GeneType, geneB: GeneType) => boolean
+
+interface ArrayMatchOptions<GeneType> {
+  computeIsEqual?: ComputeIsEqual<GeneType>
+}
 
 export class ArrayMatch<GeneType> {
+  private computeIsEqual: ComputeIsEqual<GeneType>
+
+  constructor(options?: ArrayMatchOptions<GeneType>) {
+    this.computeIsEqual = options?.computeIsEqual || computeIsEqualIdentity
+  }
+
   getFitness(
-    current: Chromosome<GeneType, number>,
-    target: Chromosome<GeneType, number>
+    currentChromosome: Chromosome<GeneType>,
+    targetChromosome: Chromosome<GeneType>
   ): NumberFitness {
-    const geneLength = current.getLength()
+    const geneLength = currentChromosome.getLength()
+
     let fitness = 0
 
     for (let i = 0; i < geneLength; i++) {
-      fitness = current.getGene(i) === target.getGene(i) ? fitness + 1 : fitness
+      fitness = this.computeIsEqual(currentChromosome.getGene(i), targetChromosome.getGene(i))
+        ? fitness + 1
+        : fitness
     }
 
     return new NumberFitness(fitness)
   }
 
-  getTargetFitness(target: Chromosome<GeneType, number>): NumberFitness {
-    return new NumberFitness(target.genes.length)
+  getTargetFitness(targetChromosome: Chromosome<GeneType>): NumberFitness {
+    return new NumberFitness(targetChromosome.genes.length)
   }
 }

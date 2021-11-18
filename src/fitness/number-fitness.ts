@@ -1,7 +1,7 @@
-import {Fitness} from './types'
+import type {Fitness} from './types'
 
 export class NumberFitness implements Fitness<number> {
-  public value: number
+  public readonly value: number
 
   protected maximize: boolean
 
@@ -20,13 +20,5 @@ export class NumberFitness implements Fitness<number> {
 
   isLessThan(fitness: Fitness<number>): boolean {
     return this.maximize ? this.value < fitness.value : this.value > fitness.value
-  }
-
-  toString(): string {
-    return String(this.value)
-  }
-
-  valueOf(): number {
-    return this.value
   }
 }
