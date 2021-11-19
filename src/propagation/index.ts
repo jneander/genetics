@@ -1,7 +1,5 @@
-import {BoundedLoop} from '@jneander/utils-async'
-
-import {Chromosome} from '../chromosomes'
-import {Fitness} from '../fitness'
+import type {Chromosome} from '../chromosomes'
+import type {Fitness} from '../fitness'
 import type {PropagationRecord} from './types'
 
 export type {PropagationRecord}
@@ -12,10 +10,8 @@ export type PropagationConfig<GeneType, FitnessValueType> = {
   calculateFitness(chromosome: Chromosome<GeneType>): Fitness<FitnessValueType>
   generateParent(): Chromosome<GeneType>
   mutate(chromosome: Chromosome<GeneType>): Chromosome<GeneType>
-  onFinish(): void
   onImprovement(record: PropagationRecord<GeneType, FitnessValueType>): void
   onIteration(record: PropagationRecord<GeneType, FitnessValueType>): void
-  onRun(): void
 }
 
 export class Propagation<GeneType, FitnessValueType> {
@@ -25,16 +21,12 @@ export class Propagation<GeneType, FitnessValueType> {
   private bestRecord: PropagationRecord<GeneType, FitnessValueType> | null
   private currentRecord: PropagationRecord<GeneType, FitnessValueType> | null
 
-  private loop: BoundedLoop | null
-
   constructor(config: PropagationConfig<GeneType, FitnessValueType>) {
     this.config = config
 
     this.iterationCount = 0
     this.bestRecord = null
     this.currentRecord = null
-
-    this.loop = null
   }
 
   get iteration() {
@@ -49,91 +41,65 @@ export class Propagation<GeneType, FitnessValueType> {
     return this.currentRecord
   }
 
-  run(): void {
-    if (this.loop != null) {
-      return
+  get hasReachedOptimalFitness(): boolean {
+    return this.best != null && !this.best.fitness.isLessThan(this.config.optimalFitness)
+  }
+
+  iterate(): boolean {
+    if (this.hasReachedOptimalFitness) {
+      return false
     }
 
-    this.config.onRun()
+    if (this.bestRecord == null) {
+      this.iterationCount = 1
 
-    if (!this.iterationCount) {
-      this.iterationCount++
-      this.bestRecord = this.generateParentRecord()
+      const chromosome = this.config.generateParent()
+      const fitness = this.config.calculateFitness(chromosome)
 
-      this.config.onIteration(this.bestRecord)
+      this.currentRecord = {
+        chromosome,
+        fitness,
+        iteration: this.iterationCount
+      }
+
+      this.config.onIteration(this.currentRecord)
+
+      this.bestRecord = this.currentRecord
       this.config.onImprovement(this.bestRecord)
 
-      this.currentRecord = this.bestRecord
-
-      if (!this.bestRecord.fitness!.isLessThan(this.config.optimalFitness)) {
-        this.config.onFinish()
-        return
-      }
-    }
-
-    this.loop = new BoundedLoop({loopFn: this.iterate.bind(this)})
-    this.loop.start()
-  }
-
-  stop(): void {
-    if (this.loop != null) {
-      this.loop.stop()
-      this.loop = null
-    }
-  }
-
-  private generateParentRecord(): PropagationRecord<GeneType, FitnessValueType> {
-    const chromosome = this.config.generateParent()
-    const fitness = this.config.calculateFitness(chromosome)
-
-    return {
-      chromosome,
-      fitness,
-      iteration: 1
-    }
-  }
-
-  private iterate(): void {
-    if (!this.bestRecord) {
-      // This is a safety check against calling .iterate() incorrectly. This
-      // situation should never occur.
-      return
+      return true
     }
 
     this.iterationCount++
     const nextChromosome = this.config.mutate(this.bestRecord.chromosome)
     const childFitness = this.config.calculateFitness(nextChromosome)
 
-    const childRecord: PropagationRecord<GeneType, FitnessValueType> = {
+    this.currentRecord = {
       chromosome: nextChromosome,
       fitness: childFitness,
       iteration: this.iterationCount
     }
 
-    this.config.onIteration(childRecord)
+    this.config.onIteration(this.currentRecord)
 
-    this.currentRecord = childRecord
-    if (this.bestRecord.fitness.isGreaterThan(childRecord.fitness)) {
+    if (this.bestRecord.fitness.isGreaterThan(this.currentRecord.fitness)) {
       // This mutation is worse than the best ancestor. Reject it.
-      return
+      return true
     }
 
-    if (!childRecord.fitness.isGreaterThan(this.bestRecord.fitness)) {
+    if (!this.currentRecord.fitness.isGreaterThan(this.bestRecord.fitness)) {
       /*
        * This mutation is not better than the best ancestor, but could still
        * help progress. Assign it as the best record for that reason, but do not
        * report it as an improvement.
        */
-      this.bestRecord = childRecord
-      return
+      this.bestRecord = this.currentRecord
+      return true
     }
 
-    this.bestRecord = childRecord
+    this.bestRecord = this.currentRecord
     this.config.onImprovement(this.bestRecord)
 
-    if (!childRecord.fitness.isLessThan(this.config.optimalFitness)) {
-      this.stop()
-      this.config.onFinish()
-    }
+    return true
   }
 }
