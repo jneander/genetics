@@ -30,7 +30,7 @@ export class ArrayOrderFitness implements Fitness<ArrayOrderFitnessValue> {
   }
 }
 
-function computeIsOrderedAscending(nextGene: any, previousGene: any): boolean {
+function computeIsOrderedAscending(previousGene: any, nextGene: any): boolean {
   return nextGene >= previousGene
 }
 
