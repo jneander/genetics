@@ -1,45 +1,18 @@
-export function shuffleArray<T = any>(array: T[]): T[] {
-  for (let i = array.length; i; i--) {
-    let j = Math.floor(Math.random() * i)
-    ;[array[i - 1], array[j]] = [array[j], array[i - 1]]
-  }
-  return array
-}
-
-export function shuffleString(string: string): string {
-  return shuffleArray(string.split('')).join('')
-}
-
-export function randomInt(min: number, max: number) {
-  const minInt = Math.ceil(min)
-  const maxInt = Math.floor(max)
-  return Math.floor(Math.random() * (maxInt - minInt)) + minInt
-}
-
-export function sampleString(string: string, count = 1): string {
-  return shuffleString(string).slice(0, count)
-}
-
-export function sampleArray<T = any>(array: T[], count = 1): T[] {
-  return shuffleArray<T>(array).slice(0, count)
-}
-
 /**
- * @param array An array of values.
- * @returns One element of the array at random.
+ * A function which returns a random, unsigned 32-bit integer. This function
+ * uses `Math.random` and does not eliminate bias. It is intended for use as an
+ * internal fallback for random number generation.
+ *
+ * @param {number} [minInclusive] A lower limit (inclusive) which the returned
+ * value will be at least. Cannot be below `0`.
+ * @param {number} [maxExclusive] An upper limit (exclusive) below which the
+ * returned number will be constrained. Cannot exceed `4294967296`.
+ *
+ * @returns {number} An unsigned 32-bit integer.
  */
-export function randomEntry<T = any>(array: T[]): T {
-  return array[Math.floor(Math.random() * array.length)]
-}
+export function randomInt(minInclusive: number, maxExclusive: number) {
+  const minInt = Math.ceil(minInclusive)
+  const maxInt = Math.floor(maxExclusive)
 
-export function range(start: number, end: number): number[] {
-  return Array.from({length: end - start}, (_, key) => key + start)
-}
-
-export function sum(array: number[]): number {
-  return array.reduce((sum, value) => sum + value, 0)
-}
-
-export function product(array: number[]): number {
-  return array.reduce((sum, value) => sum * value, 1)
+  return (Math.floor(Math.random() * (maxInt - minInt)) + minInt) >>> 0
 }
