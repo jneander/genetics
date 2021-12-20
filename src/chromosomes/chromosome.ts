@@ -1,4 +1,4 @@
-export class Chromosome<GeneType> {
+export class Chromosome<GeneType = any> {
   public readonly genes: GeneType[]
 
   constructor(genes: GeneType[]) {
@@ -11,7 +11,7 @@ export class Chromosome<GeneType> {
    * @param {number} index The array position of the gene.
    * @returns {GeneType} The gene at the given index within the Chromosome.
    */
-  getGene(index: number): GeneType {
+  getGene(index: number): GeneType | undefined {
     return this.genes[index]
   }
 

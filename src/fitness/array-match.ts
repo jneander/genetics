@@ -11,7 +11,7 @@ interface ArrayMatchOptions<GeneType> {
   computeIsEqual?: ComputeIsEqual<GeneType>
 }
 
-export class ArrayMatch<GeneType> {
+export class ArrayMatch<GeneType = any> {
   private computeIsEqual: ComputeIsEqual<GeneType>
 
   constructor(options?: ArrayMatchOptions<GeneType>) {
@@ -27,9 +27,13 @@ export class ArrayMatch<GeneType> {
     let fitness = 0
 
     for (let i = 0; i < geneLength; i++) {
-      fitness = this.computeIsEqual(currentChromosome.getGene(i), targetChromosome.getGene(i))
-        ? fitness + 1
-        : fitness
+      const currentGene = currentChromosome.getGene(i)
+      const targetGene = targetChromosome.getGene(i)
+
+      fitness =
+        currentGene && targetGene && this.computeIsEqual(currentGene, targetGene)
+          ? fitness + 1
+          : fitness
     }
 
     return new NumberFitness(fitness)

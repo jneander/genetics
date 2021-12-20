@@ -64,7 +64,7 @@ export class ArrayOrder<GeneType = number | string> {
     let gap = 0
 
     for (let i = 1; i < chromosome.genes.length; i++) {
-      const [previousGene, nextGene] = [chromosome.getGene(i - 1), chromosome.getGene(i)]
+      const [previousGene, nextGene] = [chromosome.getGene(i - 1)!, chromosome.getGene(i)!]
       if (this.computeIsOrdered(previousGene, nextGene)) {
         ordered++
       } else {
