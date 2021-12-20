@@ -3,11 +3,11 @@ import type {Fitness} from './types'
 export class NumberFitness implements Fitness<number> {
   public readonly value: number
 
-  protected maximize: boolean
+  protected higherIsGreater: boolean
 
-  constructor(value: number, maximize = true) {
+  constructor(value: number, higherIsGreater = true) {
     this.value = value
-    this.maximize = maximize
+    this.higherIsGreater = higherIsGreater
   }
 
   isEqualTo(fitness: Fitness<number>): boolean {
@@ -15,10 +15,10 @@ export class NumberFitness implements Fitness<number> {
   }
 
   isGreaterThan(fitness: Fitness<number>): boolean {
-    return this.maximize ? this.value > fitness.value : this.value < fitness.value
+    return this.higherIsGreater ? this.value > fitness.value : this.value < fitness.value
   }
 
   isLessThan(fitness: Fitness<number>): boolean {
-    return this.maximize ? this.value < fitness.value : this.value > fitness.value
+    return this.higherIsGreater ? this.value < fitness.value : this.value > fitness.value
   }
 }
