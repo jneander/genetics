@@ -7,6 +7,7 @@ src
 *.spec.js
 .eslintrc.cjs
 .eslintignore
+.mocharc.json
 .prettierrc
 tsconfig.json
 .babelrc
