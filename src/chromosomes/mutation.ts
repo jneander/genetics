@@ -29,19 +29,14 @@ export function replaceOneGene<GeneType>(chromosome: Chromosome<GeneType>, geneS
  *
  * @template GeneType
  * @param {Chromosome<GeneType>} chromosome The Chromosome to mutate.
- * @param {number} [times=1] The number of times to perform the random gene swap.
  * @returns A new Chromosome instance with two genes swapped.
  */
-export function swapTwoGenes<GeneType>(chromosome: Chromosome<GeneType>, times = 1) {
+export function swapTwoGenes<GeneType>(chromosome: Chromosome<GeneType>) {
   const mutationGenes = [...chromosome.genes]
 
-  let mutations = times
-  while (mutations > 0) {
-    mutations--
-    const [indexA, indexB] = sampleArray(range(0, chromosome.genes.length), 2)
-    mutationGenes[indexA] = chromosome.genes[indexB]
-    mutationGenes[indexB] = chromosome.genes[indexA]
-  }
+  const [indexA, indexB] = sampleArray(range(0, chromosome.genes.length), 2)
+  mutationGenes[indexA] = chromosome.genes[indexB]
+  mutationGenes[indexB] = chromosome.genes[indexA]
 
   return new Chromosome<GeneType>(mutationGenes)
 }
